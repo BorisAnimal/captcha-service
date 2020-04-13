@@ -6,6 +6,11 @@ scalaVersion := "2.13.1"
 
 lazy val http4sVersion = "0.21.2"
 lazy val pureconfigVersion = "0.12.3"
+val CirceVersion = "0.13.0"
+val CirceGenericExVersion = "0.13.0"
+val CirceConfigVersion = "0.8.0"
+val DoobieVersion = "0.9.0"
+val EnumeratumCirceVersion = "1.5.23"
 
 
 //// Only necessary for SNAPSHOT releases
@@ -19,6 +24,15 @@ addCompilerPlugin(
 
 
 libraryDependencies ++= Seq(
+  "io.circe" %% "circe-generic" % CirceVersion,
+  "io.circe" %% "circe-literal" % CirceVersion,
+  "io.circe" %% "circe-generic-extras" % CirceGenericExVersion,
+  "io.circe" %% "circe-parser" % CirceVersion,
+  "io.circe" %% "circe-config" % CirceConfigVersion,
+  "org.http4s" %% "http4s-circe" % http4sVersion,
+
+
+
   "org.typelevel" %% "cats-core" % "2.1.1",
 
   "org.http4s" %% "http4s-dsl" % http4sVersion,
