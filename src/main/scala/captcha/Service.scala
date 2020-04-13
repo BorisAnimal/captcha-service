@@ -16,9 +16,8 @@ object Service extends IOApp {
 
   //  http://localhost:8080/check?id=1&answer=1337
   //
-  val services = AnswerChecker.checkerService <+> CaptchaGenerator.captchaService
-
-  val httpApp = Router("/" -> services).orNotFound
+  def services(conf: ServiceConf) =
+    AnswerChecker.checkerService <+> new CaptchaGenerator(conf.server.captchaLen).captchaService
 
 
   override def run(args: List[String]): IO[ExitCode] =
@@ -26,7 +25,7 @@ object Service extends IOApp {
       conf <- Blocker[IO].use(ServiceConf.parseConfig)
       server <- BlazeServerBuilder[IO]
         .bindHttp(conf.server.port, conf.server.host)
-        .withHttpApp(httpApp)
+        .withHttpApp(Router("/" -> services(conf)).orNotFound)
         .resource
         .use(_ => IO.never)
         .as(ExitCode.Success)

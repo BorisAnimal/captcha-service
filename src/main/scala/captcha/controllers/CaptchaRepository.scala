@@ -10,6 +10,9 @@ import scala.collection.mutable
 
 // It can be DB access layer in future
 object CaptchaRepository {
+  sealed trait CheckerError
+  object IdError extends CheckerError
+
   val id2answer: mutable.Map[ID, Answer] = mutable.Map[ID, Answer]()
 
   private var idCounter: ID = 0
@@ -24,7 +27,7 @@ object CaptchaRepository {
     id2answer.subtractOne(id)
   }
 
-  def get(id: ID): Answer = {
-    id2answer(id)
+  def get(id: ID): Option[Answer] = {
+    id2answer.get(id)
   }
 }

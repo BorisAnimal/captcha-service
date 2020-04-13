@@ -14,7 +14,8 @@ case class DBConf(url: String,
 
 case class ServerConf(
                        host: String,
-                       port: Int
+                       port: Int,
+                       captchaLen:Int,
                      )
 
 case class ServiceConf(db: DBConf, server: ServerConf)

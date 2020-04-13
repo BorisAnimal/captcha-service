@@ -31,6 +31,8 @@ libraryDependencies ++= Seq(
   "com.github.pureconfig" %% "pureconfig-cats-effect" % pureconfigVersion,
 
   "com.typesafe.slick" %% "slick" % "3.3.2",
+
+  "ru.tinkoff" %% "tofu" % "0.7.4",
 )
 
 //scalacOptions ++= Seq("-Ypartial-unification")
