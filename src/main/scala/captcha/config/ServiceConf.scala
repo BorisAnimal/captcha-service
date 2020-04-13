@@ -1,11 +1,11 @@
-package captcha
+package captcha.config
 
-import pureconfig._
+import cats.effect.{Blocker, ContextShift, IO}
+
+//import pureconfig.generic.auto._ // if implicit error, add this import
 import pureconfig.generic.auto._
-
-
+import pureconfig._
 import pureconfig.module.catseffect.syntax._
-import cats.effect.{ Blocker, ContextShift, IO }
 
 case class DBConf(url: String,
                   user: String,

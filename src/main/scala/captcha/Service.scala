@@ -2,7 +2,8 @@ package captcha
 
 //import cats.effect._, org.http4s._, org.http4s.dsl.io._, scala.concurrent.ExecutionContext.Implicits.global
 
-import captcha.instances.{Captcha, Checker}
+import captcha.config.ServiceConf
+import captcha.controllers.{AnswerChecker, CaptchaGenerator}
 import cats.effect.{Blocker, ExitCode, IO, IOApp}
 import cats.implicits._
 import org.http4s.implicits._
@@ -13,9 +14,9 @@ import org.http4s.server.blaze._
 object Service extends IOApp {
 
 
-//  http://localhost:8080/check?id=1&answer=1337
-//
-  val services = Checker.checkerService <+> Captcha.captchaService
+  //  http://localhost:8080/check?id=1&answer=1337
+  //
+  val services = AnswerChecker.checkerService <+> CaptchaGenerator.captchaService
 
   val httpApp = Router("/" -> services).orNotFound
 
