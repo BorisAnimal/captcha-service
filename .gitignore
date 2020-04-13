@@ -1,0 +1,9 @@
+# IntelliJ
+.idea/
+
+# Scala
+target/
+null/
+
+# Other
+.DS_Store
