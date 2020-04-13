@@ -7,7 +7,7 @@ case class Captcha(id: ID, secret: Question)
 
 object Captcha {
   type Question = String // TODO: change on image
-  type ID = Int
+  type ID = Int//Numeric[Int]
 
-  def registerRandomCaptcha(): Captcha = Captcha(1, "1337")
+//  implicit def converter(v: Int): Numeric[Int] = Numeric.apply.fromInt(v)
 }

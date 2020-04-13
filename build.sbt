@@ -4,7 +4,10 @@ version := "0.1"
 
 scalaVersion := "2.13.1"
 
-val http4sVersion = "0.21.2"
+lazy val http4sVersion = "0.21.2"
+lazy val pureconfigVersion = "0.12.3"
+
+
 //// Only necessary for SNAPSHOT releases
 //resolvers += Resolver.sonatypeRepo("snapshots")
 
@@ -23,8 +26,11 @@ libraryDependencies ++= Seq(
   "org.http4s" %% "http4s-blaze-client" % http4sVersion,
 
   "org.scalatest" %% "scalatest" % "3.1.0" % Test,
-  "com.github.pureconfig" %% "pureconfig" % "0.12.3",
-  "com.github.pureconfig" %% "pureconfig-cats-effect" % "0.12.3"
+
+  "com.github.pureconfig" %% "pureconfig" % pureconfigVersion,
+  "com.github.pureconfig" %% "pureconfig-cats-effect" % pureconfigVersion,
+
+  "com.typesafe.slick" %% "slick" % "3.3.2",
 )
 
 //scalacOptions ++= Seq("-Ypartial-unification")
