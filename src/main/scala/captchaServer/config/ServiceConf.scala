@@ -1,4 +1,4 @@
-package captcha.config
+package captchaServer.config
 
 import cats.effect.{Blocker, ContextShift, IO}
 

@@ -1,7 +1,7 @@
-# captcha service
+# captchaText service
 
 ## TODO:
--1. Handle local, because for now captcha is like this "玁冧ἀ蓆"
+-1. Handle local, because for now captchaText is like this "玁冧ἀ蓆"
 0. Add logging and recovery on request crush
 1. Add MNIST data 
     1. Loading and unpacking (.sh script)

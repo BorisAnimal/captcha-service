@@ -1,4 +1,4 @@
-name := "captcha-service"
+name := "captchaServer-service"
 
 version := "0.1"
 
@@ -24,6 +24,9 @@ addCompilerPlugin(
 
 
 libraryDependencies ++= Seq(
+  "io.monix" %% "monix" % "3.1.0",
+
+
   "io.circe" %% "circe-generic" % CirceVersion,
   "io.circe" %% "circe-literal" % CirceVersion,
   "io.circe" %% "circe-generic-extras" % CirceGenericExVersion,
@@ -42,6 +45,7 @@ libraryDependencies ++= Seq(
   "org.scalatest" %% "scalatest" % "3.1.0" % Test,
 
   "com.github.pureconfig" %% "pureconfig" % pureconfigVersion,
+  "com.github.pureconfig" %% "pureconfig-cats" % pureconfigVersion,
   "com.github.pureconfig" %% "pureconfig-cats-effect" % pureconfigVersion,
 
   "com.typesafe.slick" %% "slick" % "3.3.2",
