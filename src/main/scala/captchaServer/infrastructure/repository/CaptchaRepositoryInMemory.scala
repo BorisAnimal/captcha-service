@@ -1,10 +1,12 @@
 package captchaServer.infrastructure.repository
 
 import captchaServer.domain.captcha.{Captcha, CaptchaRepositoryAlgebra}
+import cats.Monad
 import cats.effect.Sync
 import cats.effect.concurrent.Ref
 import cats.implicits._
-import cats.{Id, Monad}
+
+import scala.collection.concurrent.TrieMap
 
 // About Ref:
 // https://www.pluralsight.com/tech-blog/scala-cats-effect-ref/
@@ -16,14 +18,16 @@ trait IdGenerator[Wrapper[_], T] {
 }
 
 object IdGenerator {
-  implicit val increment: Int => Int = _ + 1
+  implicit val incrementInt: Int => Int = _ + 1
+  implicit val incrementLong: Long => Long = _ + 1
 
-  val simpleGenerator: IdGenerator[Id, Int] = new IdGenerator[Id, Int] {
-    private var lastId = 0
+  def simpleGenerator[Wrapper[_] : Monad, T: Numeric]: IdGenerator[Wrapper, T] = new IdGenerator[Wrapper, T] {
+    private var lastId = Numeric[T].zero
 
-    override def next(implicit increment: Int => Int): Id[Int] = {
+    override def next(implicit increment: T => T): Wrapper[T] = {
+      val mem = lastId
       lastId = increment(lastId)
-      Monad[Id].pure(lastId)
+      Monad[Wrapper].pure(mem)
     }
   }
 
@@ -36,25 +40,23 @@ object IdGenerator {
 }
 
 class CaptchaRepositoryInMemory[Wrapper[_] : Sync] extends CaptchaRepositoryAlgebra[Wrapper] {
+  import IdGenerator._
 
-  protected val generator: IdGenerator[Wrapper, Int] = IdGenerator.atomicGenerator[Wrapper, Int]
+  type MapType = TrieMap[Int, Captcha]
+  type Id[A] = A
+  protected val generator: IdGenerator[Id, Int] = IdGenerator.simpleGenerator
+  protected val cache: MapType = new MapType()
 
-  type MapType = Map[Int, Captcha]
+  def create(captcha: Captcha): Wrapper[Captcha] = {
+    val newId = generator.next
+    val newCaptcha = captcha.copy(id = newId.some)
+    cache += (newId -> newCaptcha)
+    newCaptcha.pure[Wrapper]
+  }
 
-  protected def ref: Wrapper[Ref[Wrapper, MapType]] = Ref[Wrapper].of(Map())
+  def delete(id: Int): Wrapper[Option[Captcha]] = cache.remove(id).pure[Wrapper]
 
-  def create(captcha: Captcha): Wrapper[Captcha] = for {
-    newId <- generator.next
-    newCaptcha = captcha.copy(id = newId.some)
-    _ <- ref.flatMap(_.modify(m => (m.updated(newId, newCaptcha), None)))
-  } yield newCaptcha.copy()
+  def size: Int = cache.size
 
-  def delete(id: Int): Wrapper[Unit] = for {
-    _ <- ref.flatMap(_.modify(m => (m.removed(id), None))) // Here could be error
-  } yield ()
-
-  def get(id: Int): Wrapper[Option[Captcha]] = for {
-    map <- ref.flatMap(_.get)
-    value = map(id)
-  } yield value.some
+  def get(id: Int): Wrapper[Option[Captcha]] = cache.get(id).pure[Wrapper]
 }

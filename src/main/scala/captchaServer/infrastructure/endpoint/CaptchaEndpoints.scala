@@ -16,10 +16,10 @@ class CaptchaEndpoints[F[_] : Sync] extends Http4sDsl[F] {
   }
 
   private def checkCaptchaEndpoint(captchaService: CaptchaService[F]): HttpRoutes[F] = HttpRoutes.of[F] {
-    case GET -> Root / "check" :? IdQueryParameterMatcher(id) +& AnswerQueryParameterMatcher(answer) =>
+    case request@GET -> Root / "check" :? IdQueryParameterMatcher(id) +& AnswerQueryParameterMatcher(answer) =>
       captchaService.checkCaptcha(id, answer).value.flatMap {
         case Right(value) => Ok(value.asJson)
-        case Left(value) => Conflict(value.toString)
+        case Left(error) => NotFound(error.toString.asJson)
       }
   }
 
@@ -35,7 +35,6 @@ class CaptchaEndpoints[F[_] : Sync] extends Http4sDsl[F] {
   object IdQueryParameterMatcher extends QueryParamDecoderMatcher[Int](name = "id")
 
   object AnswerQueryParameterMatcher extends QueryParamDecoderMatcher[String](name = "answer")
-
 
 }
 

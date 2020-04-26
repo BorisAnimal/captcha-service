@@ -15,7 +15,7 @@ class CaptchaService[F[_] : Monad](repositoryAlgebra: CaptchaRepositoryAlgebra[F
   def checkCaptcha(captchaId: Int, possibleAnswer: String):
   EitherT[F, CaptchaNotFoundError, Boolean] = {
     val answer = for {
-      item <- repositoryAlgebra.get(captchaId)
+      item <- repositoryAlgebra.get(captchaId) // Maybe delete?
     } yield item.map(_.answer.equals(possibleAnswer))
     EitherT.fromOptionF(answer, CaptchaNotFoundError(captchaId))
   }

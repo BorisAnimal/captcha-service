@@ -34,15 +34,14 @@ libraryDependencies ++= Seq(
   "io.circe" %% "circe-config" % CirceConfigVersion,
   "org.http4s" %% "http4s-circe" % http4sVersion,
 
-
-
-  "org.typelevel" %% "cats-core" % "2.1.1",
-
   "org.http4s" %% "http4s-dsl" % http4sVersion,
   "org.http4s" %% "http4s-blaze-server" % http4sVersion,
   "org.http4s" %% "http4s-blaze-client" % http4sVersion,
 
+  "org.typelevel" %% "cats-core" % "2.1.1",
+
   "org.scalatest" %% "scalatest" % "3.1.0" % Test,
+  "com.codecommit" %% "cats-effect-testing-specs2" %  "0.4.0" % Test,
 
   "com.github.pureconfig" %% "pureconfig" % pureconfigVersion,
   "com.github.pureconfig" %% "pureconfig-cats" % pureconfigVersion,
@@ -51,6 +50,7 @@ libraryDependencies ++= Seq(
   "com.typesafe.slick" %% "slick" % "3.3.2",
 
   "ru.tinkoff" %% "tofu" % "0.7.4",
+  "ru.tinkoff" %% "tofu-logging" % "0.7.4"
 )
 
 //scalacOptions ++= Seq("-Ypartial-unification")
