@@ -7,30 +7,23 @@ import cats.implicits._
 import monix.eval.Task
 import monix.execution.Scheduler
 import monix.execution.schedulers.SchedulerService
-import org.mockito.specs2.Mockito
 import org.specs2.mutable.Specification
 
-class CaptrchaServiceSpec extends Specification with CatsIO with Mockito {
+class CaptrchaServiceSpec extends Specification with CatsIO {
   implicit val scheduler: SchedulerService = Scheduler.singleThread("Testing")
-
-  //  def init(): (CaptchaRepositoryAlgebra[Task], AnswerGenerator, CaptchaService[Task], Captcha) = {
-  //    val captcha = Captcha("aa", Some(0))
-  //    val rep = mock[CaptchaRepositoryAlgebra[Task]]
-  //    rep.create(any[Captcha]).returns(captcha.pure[Task])
-  //    rep.get(0).returns(captcha.some.pure[Task])
-  //    val gen = AnswerGenerator(Set("a"), 2, None)
-  //    val service = CaptchaService[Task](rep, gen)
-  //
-  //    (rep, gen, service, captcha)
-  //  }
 
   "CaptchaService" should {
     "generateCaptcha" in IO {
       //      val (rep, gen, service, captcha) = init()
       val captcha = Captcha("aa", Some(0))
-      val rep = mock[CaptchaRepositoryAlgebra[Task]]
-      rep.create(any[Captcha]).returns(captcha.pure[Task])
-      rep.get(0).returns(captcha.some.pure[Task])
+      
+      val rep = new CaptchaRepositoryAlgebra[Task] {
+        override def create(captcha: Captcha): Task[Captcha] = captcha.copy(id = Some(0)).pure[Task]
+        override def delete(id: Int): Task[Option[Captcha]] = ???
+        override def get(id: Int): Task[Option[Captcha]] = ???
+        override def size: Int = ???
+      }
+
       val gen = AnswerGenerator(Set("a"), 2, None)
       val service = CaptchaService[Task](rep, gen)
 
@@ -42,9 +35,17 @@ class CaptrchaServiceSpec extends Specification with CatsIO with Mockito {
       //      val (rep, gen, service, captcha) = init()
 
       val captcha = Captcha("aa", Some(0))
-      val rep = mock[CaptchaRepositoryAlgebra[Task]]
-      rep.create(any[Captcha]).returns(captcha.pure[Task])
-      rep.get(0).returns(captcha.some.pure[Task])
+      
+      val rep = new CaptchaRepositoryAlgebra[Task] {
+        override def create(captcha: Captcha): Task[Captcha] = ???
+        override def delete(id: Int): Task[Option[Captcha]] = ???
+        override def get(id: Int): Task[Option[Captcha]] = id match {
+          case 0 => captcha.some.pure[Task]
+          case _ => None.pure[Task]
+        }
+        override def size: Int = ???
+      }
+      
       val gen = AnswerGenerator(Set("a"), 2, None)
       val service = CaptchaService[Task](rep, gen)
 
@@ -55,9 +56,17 @@ class CaptrchaServiceSpec extends Specification with CatsIO with Mockito {
       //      val (rep, gen, service, captcha) = init()
 
       val captcha = Captcha("aa", Some(0))
-      val rep = mock[CaptchaRepositoryAlgebra[Task]]
-      rep.create(any[Captcha]).returns(captcha.pure[Task])
-      rep.get(0).returns(captcha.some.pure[Task])
+      
+      val rep = new CaptchaRepositoryAlgebra[Task] {
+        override def create(captcha: Captcha): Task[Captcha] = ???
+        override def delete(id: Int): Task[Option[Captcha]] = ???
+        override def get(id: Int): Task[Option[Captcha]] = id match {
+          case 0 => captcha.some.pure[Task]
+          case _ => None.pure[Task]
+        }
+        override def size: Int = ???
+      }
+      
       val gen = AnswerGenerator(Set("a"), 2, None)
       val service = CaptchaService[Task](rep, gen)
 

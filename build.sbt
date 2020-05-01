@@ -40,9 +40,9 @@ libraryDependencies ++= Seq(
 
   "org.typelevel" %% "cats-core" % "2.1.1",
 
-  "org.mockito" % "mockito-scala-specs2_2.13" % "1.14.0",
+//  "org.mockito" % "mockito-scala-specs2_2.13" % "1.14.0", // Some conflict with names on Matcher
   "org.scalatest" %% "scalatest" % "3.1.0" % Test,
-//  "com.codecommit" %% "cats-effect-testing-specs2" %  "0.4.0" % Test,
+  "com.codecommit" %% "cats-effect-testing-specs2" %  "0.4.0" % Test,
 
   "com.github.pureconfig" %% "pureconfig" % pureconfigVersion,
   "com.github.pureconfig" %% "pureconfig-cats" % pureconfigVersion,
