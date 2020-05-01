@@ -40,8 +40,9 @@ libraryDependencies ++= Seq(
 
   "org.typelevel" %% "cats-core" % "2.1.1",
 
+  "org.mockito" % "mockito-scala-specs2_2.13" % "1.14.0",
   "org.scalatest" %% "scalatest" % "3.1.0" % Test,
-  "com.codecommit" %% "cats-effect-testing-specs2" %  "0.4.0" % Test,
+//  "com.codecommit" %% "cats-effect-testing-specs2" %  "0.4.0" % Test,
 
   "com.github.pureconfig" %% "pureconfig" % pureconfigVersion,
   "com.github.pureconfig" %% "pureconfig-cats" % pureconfigVersion,
@@ -50,7 +51,9 @@ libraryDependencies ++= Seq(
   "com.typesafe.slick" %% "slick" % "3.3.2",
 
   "ru.tinkoff" %% "tofu" % "0.7.4",
-  "ru.tinkoff" %% "tofu-logging" % "0.7.4"
+  "ru.tinkoff" %% "tofu-logging" % "0.7.4",
+
 )
 
 //scalacOptions ++= Seq("-Ypartial-unification")
+//scalacOptions ++= Seq("-Ylog-classpath")

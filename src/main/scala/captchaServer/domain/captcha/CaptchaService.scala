@@ -20,3 +20,8 @@ class CaptchaService[F[_] : Monad](repositoryAlgebra: CaptchaRepositoryAlgebra[F
     EitherT.fromOptionF(answer, CaptchaNotFoundError(captchaId))
   }
 }
+
+object CaptchaService {
+  def apply[F[_] : Monad](rep: CaptchaRepositoryAlgebra[F], gen: AnswerGenerator): CaptchaService[F] =
+    new CaptchaService(rep, gen)
+}
