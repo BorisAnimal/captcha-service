@@ -1,9 +1,9 @@
 package captchaServer.domain.captcha
 
 import captchaServer.domain.CaptchaNotFoundError
+import captchaServer.infrastructure.repository.CaptchaRepositoryInMemory
 import cats.effect.IO
 import cats.effect.testing.specs2.CatsIO
-import cats.implicits._
 import monix.eval.Task
 import monix.execution.Scheduler
 import monix.execution.schedulers.SchedulerService
@@ -14,15 +14,9 @@ class CaptrchaServiceSpec extends Specification with CatsIO {
 
   "CaptchaService" should {
     "generateCaptcha" in IO {
-      //      val (rep, gen, service, captcha) = init()
       val captcha = Captcha("aa", Some(0))
-      
-      val rep = new CaptchaRepositoryAlgebra[Task] {
-        override def create(captcha: Captcha): Task[Captcha] = captcha.copy(id = Some(0)).pure[Task]
-        override def delete(id: Int): Task[Option[Captcha]] = ???
-        override def get(id: Int): Task[Option[Captcha]] = ???
-        override def size: Int = ???
-      }
+
+      val rep = new CaptchaRepositoryInMemory[Task]()
 
       val gen = AnswerGenerator(Set("a"), 2, None)
       val service = CaptchaService[Task](rep, gen)
@@ -32,20 +26,11 @@ class CaptrchaServiceSpec extends Specification with CatsIO {
     }
 
     "check correct Captcha" in IO {
-      //      val (rep, gen, service, captcha) = init()
-
       val captcha = Captcha("aa", Some(0))
-      
-      val rep = new CaptchaRepositoryAlgebra[Task] {
-        override def create(captcha: Captcha): Task[Captcha] = ???
-        override def delete(id: Int): Task[Option[Captcha]] = ???
-        override def get(id: Int): Task[Option[Captcha]] = id match {
-          case 0 => captcha.some.pure[Task]
-          case _ => None.pure[Task]
-        }
-        override def size: Int = ???
-      }
-      
+
+      val rep = new CaptchaRepositoryInMemory[Task]()
+      rep.create(captcha)
+
       val gen = AnswerGenerator(Set("a"), 2, None)
       val service = CaptchaService[Task](rep, gen)
 
@@ -53,20 +38,11 @@ class CaptrchaServiceSpec extends Specification with CatsIO {
     }
 
     "decline incorrect Captcha" in IO {
-      //      val (rep, gen, service, captcha) = init()
-
       val captcha = Captcha("aa", Some(0))
-      
-      val rep = new CaptchaRepositoryAlgebra[Task] {
-        override def create(captcha: Captcha): Task[Captcha] = ???
-        override def delete(id: Int): Task[Option[Captcha]] = ???
-        override def get(id: Int): Task[Option[Captcha]] = id match {
-          case 0 => captcha.some.pure[Task]
-          case _ => None.pure[Task]
-        }
-        override def size: Int = ???
-      }
-      
+
+      val rep = new CaptchaRepositoryInMemory[Task]()
+      rep.create(captcha)
+
       val gen = AnswerGenerator(Set("a"), 2, None)
       val service = CaptchaService[Task](rep, gen)
 
