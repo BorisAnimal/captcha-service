@@ -1,7 +1,8 @@
 package captchaServer
 
 import captchaServer.config.ServiceConf
-import captchaServer.domain.captcha.{AnswerGenerator, CaptchaService}
+import captchaServer.domain.captcha.{AnswerGenerator, CaptchaService, CaptchaToImageTransformer}
+import captchaServer.infrastructure.dataset.DatasetLoader
 import captchaServer.infrastructure.endpoint.CaptchaEndpoints
 import captchaServer.infrastructure.repository.CaptchaRepositoryInMemory
 import cats.effect.ExitCode
@@ -17,7 +18,8 @@ import pureconfig.error.ConfigReaderException
 import tofu.Raise
 import tofu.syntax.raise._
 import tofu.logging.Logs
-
+// If configs raise miserable errors on implicits, import erased: import pureconfig.generic.auto._
+import pureconfig.generic.auto._
 
 object Server extends TaskApp {
   def parseConfig[F[_] : Sync, A](
@@ -33,12 +35,13 @@ object Server extends TaskApp {
   // http://localhost:8080/generate
   override def run(args: List[String]): Task[ExitCode] =
     for {
-      conf <- parseConfig[Task, ServiceConf]
+      conf <- parseConfig[Task, ServiceConf] // This config parsing make ugly whole comprehension
       repository = new CaptchaRepositoryInMemory[Task]()
-      alphabet = Set("2", "1", "3") // TODO: Make it loading and make implicit for Seq[anyVal] to CaptchaAnswer parsing
-      generator = AnswerGenerator(alphabet, conf.server.captchaLen, None)
-      captchaService = new CaptchaService[Task](repository, generator)
-      services = CaptchaEndpoints.endpoints(captchaService)
+      dataset = DatasetLoader.loadDataset(conf.dataset.dir)
+      transformer = CaptchaToImageTransformer[Task](dataset)
+      generator = AnswerGenerator(dataset.getAlphabet.toSet, conf.server.captchaLen, None)
+      captchaService = CaptchaService[Task](repository, generator)
+      services = CaptchaEndpoints.endpoints(captchaService, transformer)
       httpApp = Router("/" -> services).orNotFound
       server <- BlazeServerBuilder[Task]
         .bindHttp(conf.server.port, conf.server.host)

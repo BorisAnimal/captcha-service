@@ -1,19 +1,18 @@
 # captchaText service
 
 ## TODO:
--1. Handle local, because for now captchaText is like this "玁冧ἀ蓆"
 0. Add logging and recovery on request crush
 1. Add MNIST data 
     1. Loading and unpacking (.sh script)
-    2. Pool of files in scala code
-    3. Generator of clued images
-2. Make /generate query work with images 
+    2. ~~Pool of files in scala code~~
+    3. ~~Generator of clued images~~
+2. ~~Make /generate query work with images~~
 3. Add database
     1. Creation
     2. Connection
     3. Adding new instance
     4. Selecting and removing instance
-4. Tests
+4. ~~Tests~~
 5. v2 API
     1. Security (async)
     2. New endpoint 

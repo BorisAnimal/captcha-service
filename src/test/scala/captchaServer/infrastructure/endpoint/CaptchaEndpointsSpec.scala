@@ -1,20 +1,20 @@
 package captchaServer.infrastructure.endpoint
 
-import captchaServer.domain.captcha.{AnswerGenerator, Captcha, CaptchaService}
+import java.awt.image.BufferedImage
+
+import captchaServer.domain.captcha._
 import captchaServer.infrastructure.repository.CaptchaRepositoryInMemory
 import cats.effect.IO
 import cats.effect.testing.specs2.CatsIO
 import monix.eval.Task
 import monix.execution.Scheduler
 import monix.execution.schedulers.SchedulerService
-import org.http4s.{HttpRoutes, Request, Response, Uri}
+import org.http4s.Uri
 import org.http4s.client.dsl.Http4sClientDsl
 import org.http4s.dsl.Http4sDsl
+import org.http4s.implicits._
 import org.http4s.server.Router
 import org.specs2.mutable.Specification
-import org.http4s.implicits._
-import cats.syntax.option._
-import cats.implicits._
 
 class CaptchaEndpointsSpec extends Specification
   with CatsIO
@@ -28,7 +28,11 @@ class CaptchaEndpointsSpec extends Specification
     appendants.map(rep.create)
     val gen = AnswerGenerator(Set("a"), 2, None)
     val service = CaptchaService[Task](rep, gen)
-    val endp = CaptchaEndpoints.endpoints[Task](service)
+    val tr = new CaptchaToImageTransformer[Task](
+      Dataset(
+        Map("a" -> SymbolPicker(Seq(new BufferedImage(1, 1, 1)))))
+    )
+    val endp = CaptchaEndpoints.endpoints[Task](service, tr)
     Router("/" -> endp).orNotFound
   }
 

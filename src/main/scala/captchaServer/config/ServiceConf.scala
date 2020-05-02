@@ -18,7 +18,12 @@ case class ServerConf(
                        captchaLen:Int,
                      )
 
-case class ServiceConf(db: DBConf, server: ServerConf)
+case class DatasetConf(
+                        dir:String
+                      )
+
+
+case class ServiceConf(db: DBConf, server: ServerConf, dataset: DatasetConf)
 
 object ServiceConf {
   def parseConfig(blocker: Blocker)(implicit cs: ContextShift[IO]): IO[ServiceConf] = {

@@ -5,6 +5,7 @@ import cats.Monad
 
 import scala.util.Random
 
+
 class AnswerGenerator private(alphabet: Vector[String], val questionLen: Int,
                               val randomSeed: Option[Int] = None) {
   val r: Random = randomSeed.map(new scala.util.Random(_)).getOrElse(new scala.util.Random())
